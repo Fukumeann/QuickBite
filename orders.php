@@ -1,6 +1,5 @@
 <?php
-session_start();
-include 'connect.php';
+include 'functions.php';
 if (!isset($_SESSION["admin_id"])) {
     header("Location: admin_login.php");
     exit();
@@ -29,6 +28,7 @@ $orders = $conn->query("
 </head>
 
 <body>
+    <a href="staffs_dashboard.php">Return</a>
     <h2>Process Orders</h2>
     <table border="1" cellpadding="5">
         <tr>

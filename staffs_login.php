@@ -1,43 +1,53 @@
 <?php
-session_start();
-include 'connect.php';
-$message = "";
-
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $email = trim($_POST["email"]);
-    $password = $_POST["password"];
-
-    $stmt = $conn->prepare("SELECT * FROM staffs WHERE email = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $admin = $result->fetch_assoc();
-
-    if ($admin && password_verify($password, $admin["password"])) {
-        $_SESSION["admin_id"] = $admin["id"];
-        $_SESSION["admin_name"] = $admin["name"];
-        header("Location: staffs_dashboard.php");
-        exit();
-    } else {
-        $message = "Invalid credentials.";
-    }
+include 'functions.php';
+if (isset($_SESSION["admin_id"])) {
+    header("Location: staffs_dashboard.php");
+    exit();
 }
 ?>
 <!DOCTYPE html>
 <html>
 
 <head>
-    <title>Admin Login</title>
+    <title>QuickBite</title>
+    <link rel="stylesheet" href="css/staffs_login.css">
 </head>
 
 <body>
-    <h2>Admin Login</h2>
-    <form method="POST">
-        <input type="email" name="email" placeholder="Email" required><br><br>
-        <input type="password" name="password" placeholder="Password" required><br><br>
-        <button type="submit">Login</button>
-    </form>
-    <p><?php echo $message; ?></p>
+    <div class="boxed">
+        <header class="page-header">
+            <div class="brand">
+                <div class="logo">QB</div>
+                <div>
+                    <div style="font-weight:700">QuickBite</div>
+                    <small style="opacity:0.85;color:rgba(234,242,255,0.9)">Staff sign in</small>
+                </div>
+            </div>
+        </header>
+        <h2>Admin Login</h2>
+        <p class="message">
+            <?php
+            if (isset($_COOKIE['staff_login_err'])) {
+                echo $_COOKIE['staff_login_err'];
+            }
+            ?>
+        </p>
+        <form action="functions.php" method="POST" autocomplete="off">
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <input type="hidden" name="staff_login" value="true">
+            <button type="submit">Login</button>
+        </form>
+
+        <a href="staffs_register.php">Create staff account</a>
+        <footer class="page-footer">© QuickBite — staff access</footer>
+    </div>
 </body>
+
+<script>
+    window.addEventListener("load", () => {
+        document.cookie = "staff_login_err=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+    });
+</script>
 
 </html>

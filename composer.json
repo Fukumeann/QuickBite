@@ -1,0 +1,7 @@
+{
+    "name": "allendinglas/quickbite",
+    "type": "project",
+    "require": {
+        "phpmailer/phpmailer": "^7.0"
+    }
+}

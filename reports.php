@@ -1,6 +1,5 @@
 <?php
-session_start();
-include 'connect.php';
+include 'functions.php';
 if (!isset($_SESSION["admin_id"])) {
     header("Location: admin_login.php");
     exit();
